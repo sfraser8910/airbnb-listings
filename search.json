@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "My name is Surya and I am a high school student interested in math and computer science.\nI created this project as a part of Kane’s Summer Data Science Bootcamp.\nThe github repo for this project can be accessed here"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Airbnb Listings in Europe",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+  }
+]
