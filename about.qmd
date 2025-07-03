@@ -2,4 +2,8 @@
 title: "About"
 ---
 
-About this site
+My name is Surya and I am a high school student interested in math and computer science. 
+
+I created this project as a part of [Kane's Summer Data Science Bootcamp](https://bootcamp.davidkane.info/schedule.html#monday). 
+
+The github repo for this project can be accessed [here](https://github.com/sfraser8910/airbnb-listings.git) 

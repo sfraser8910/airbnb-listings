@@ -1,18 +1,16 @@
 library(tidyverse)
 
-# List all CSV files in the current project folder
-csv_files <- list.files(pattern = "\\.csv$")  # Looks only in current directory
+# Read only raw input files from subfolder
+csv_files <- list.files("raw_csvs/", pattern = "\\.csv$", full.names = TRUE)
 
-# Function to read each CSV and add a city column from the filename
 read_with_location <- function(file) {
-  city <- tools::file_path_sans_ext(basename(file))  # Remove .csv extension
+  city <- tools::file_path_sans_ext(basename(file))
   read_csv(file) |> mutate(city = city)
 }
 
-# Combine all CSVs into one tibble
 combined_airbnb <- map_dfr(csv_files, read_with_location)
 
-# Optional: Write the result to a new CSV
+# Save output at project root
 write_csv(combined_airbnb, "combined_airbnb.csv")
 
 # View the result

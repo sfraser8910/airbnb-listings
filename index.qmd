@@ -2,6 +2,4 @@
 title: "Airbnb Listings in Europe"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Over the last several years Airbnb vacation rentals have been rising in popularity across all major European cities. Using Airbnb listing data compiled by researchers at the University of Warsaw, I seek to understand the factors contributing high guest satisfaction ratings and how those factors differ across European cities. 
