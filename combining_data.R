@@ -24,9 +24,11 @@ combined_data <- map_dfr(csv_files, function(file_path) {
   city <- str_remove(file_name, "_(weekdays|weekends)$")
   
   # Read and append metadata
-  read_csv(file_path, show_col_types = FALSE) %>%
+  read_csv(file_path, show_col_types = FALSE) |>
     mutate(city = city, day_type = day_type)
 })
 
 # Step 3: Save to combined file
 write_csv(combined_data, "raw_csvs/airbnb_combined.csv")
+
+

@@ -1,5 +1,51 @@
 ---
 title: "Airbnb Listings in Europe"
+execute:
+    echo: false
 ---
+
+```{r,message=FALSE, warning=FALSE}
+library(tidyverse)
+library(tidyr)
+```
+
+```{r}
+combined_data <- read_csv("raw_csvs/airbnb_combined.csv")
+
+cleaned_data <- combined_data |> drop_na()
+
+avg_price_by_city <- cleaned_data |>
+  group_by(city) |>
+  summarize(realSum = mean(realSum, na.rm = TRUE)) |>
+  ungroup()
+
+avg_price_by_distance <- cleaned_data |>
+  mutate(dist = cut(dist, 
+    breaks = c(0, 5, 10, 15, 20, Inf),
+    labels = c("0-5km", "5-10km", "10-15km", "15-20km", "20+km"),
+    include.lowest = TRUE)) |>
+  group_by(dist) |>
+  summarize(realSum = mean(realSum, na.rm = TRUE)) |>
+  ungroup()
+
+london_amsterdam <- cleaned_data |> filter(city == c("lisbon", "amsterdam"))
+
+```
+
+```{r}
+avg_price_by_distance|>ggplot(aes(x=dist,y=realSum,group=1))+geom_col()+scale_y_continuous(breaks = c(0, 50, 100, 150, 200, 250, 300))
+
+cleaned_data|>ggplot(aes(x=dist,y=realSum,group=1))+geom_point(aes(color=city))+scale_y_continuous(breaks = c(0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000))
+
+london_amsterdam|>ggplot(aes(x=dist,y=realSum,group=1))+geom_point(aes(color=city))+scale_y_continuous(breaks = c(0, 300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700, 3000, 3300, 3600, 3900))
+```
+
+```{r}
+
+```
+
+```{r}
+avg_price_by_city|>ggplot(aes(x=city, y=realSum))+geom_col()
+```
 
 Over the last several years Airbnb vacation rentals have been rising in popularity across all major European cities. Using Airbnb listing data compiled by researchers at the University of Warsaw, I seek to understand the factors contributing high guest satisfaction ratings and how those factors differ across European cities. 
