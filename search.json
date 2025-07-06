@@ -11,6 +11,13 @@
     "href": "index.html",
     "title": "Airbnb Listings in Europe",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
+    "text": "Over the last several years Airbnb vacation rentals have been rising in popularity across all major European cities. Using Airbnb listing data compiled by researchers at the University of Warsaw, I seek to understand the factors contributing high guest satisfaction ratings and how those factors differ across European cities. The Airbnb listings in Amsterdam are much more expensive than rentals in other European cities; even in nutouriously expensive cities like London. By examining trends in distance to city center, distance to the nearest metro station, number of bedrooms, and types of rentals, I determined this surprising differnce between the average price of rentals in Amsterdam and London can be attributed to rentals in London being smaller, farther from tourist destinations like the city center, and less convienently located by metro stations."
+  },
+  {
+    "objectID": "sources.html",
+    "href": "sources.html",
+    "title": "Sources",
+    "section": "",
+    "text": "To make this project, I used this dataset and some help from ChatGPT."
   }
 ]
