@@ -3,3 +3,4 @@ title: "Sources"
 format: html
 ---
 
+To make this project, I used [this dataset](https://www.kaggle.com/datasets/thedevastator/airbnb-prices-in-european-cities) and some help from ChatGPT. 
