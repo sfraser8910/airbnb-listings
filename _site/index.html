@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Airbnb Listings in Europe</title>
+<title>Pricing Trends in Airbnb Rentals in European Cities – Airbnb Listings in Europe</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -120,7 +120,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Airbnb Listings in Europe</h1>
+<h1 class="title">Pricing Trends in Airbnb Rentals in European Cities</h1>
 </div>
 
 
@@ -146,6 +146,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>After noticing the surprising difference in the price of rentals in Amsterdam and elsewhere, I decided to compare listings in Amsterdam and London across different categories which may influence price in an effort to understand why Amsterdam listing prices are so much higher than notoriously expensive cities like London.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -183,6 +184,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>Rentals closer to city centers tend to be more expensive than rentals farther from city centers. Most Amsterdam rentals are closer to the city center, while some London Airbnbs are much farther from the city center. Thus, Amsterdam rentals may be more expensive on average than London rentals because they tend to be closer to the city center.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -220,6 +222,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>Generally, Airbnbs closer to metro stations are more expensive than ones farther from metro stations. In Amsterdam, rentals are closer to stations than in London, indicating the listings in Amsterdam may be more expensive than those in London because they tend to be closer to metro stations.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -250,6 +253,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>Rentals with more bedrooms tend to be more expensive than those with fewer rooms. Compared to Amsterdam Airbnbs, a relatively large proportion of rentals in London only contain one room. Thus the difference in average rental price between the two cities could be attributed to more London rentals having fewer bedrooms.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -280,7 +284,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Over the last several years Airbnb vacation rentals have been rising in popularity across all major European cities. Using Airbnb listing data compiled by researchers at the University of Warsaw, I seek to understand the factors contributing high guest satisfaction ratings and how those factors differ across European cities. The Airbnb listings in Amsterdam are much more expensive than rentals in other European cities; even in nutouriously expensive cities like London. By examining trends in distance to city center, distance to the nearest metro station, number of bedrooms, and types of rentals, I determined this surprising differnce between the average price of rentals in Amsterdam and London can be attributed to rentals in London being smaller, farther from tourist destinations like the city center, and less convienently located by metro stations.</p>
+<p>Entire home/apt rentals have a higher median price than smaller rentals (private and shared rooms). Amsterdam rentals may have a higher average price than London rentals because most rentals in Amsterdam are entire homes/apts, while most London rentals are just private rooms.</p>
+<p>Over the last several years Airbnb vacation rentals have been rising in popularity across all major European cities. The Airbnb listings in Amsterdam are much more expensive than rentals in other European cities, even famously expensive cities like London. I seek to understand why rentals in Amsterdam are so expensive in comparision to other European cities- London in perticular. By examining trends in distance to city center, distance to the nearest metro station, number of bedrooms, and types of rentals, I determined this surprising differnce between the average price of rentals in Amsterdam and London can be attributed to rentals in London being smaller, farther from tourist destinations like the city center, and less convienently located by metro stations. However, it is important to note that one major reason for the difference in average rental price between these two cities could be that there are significantly more London Airbnb data points than Amsterdam data points, meaning the Lomdon data is more representative.</p>
 
 
 
@@ -357,7 +362,7 @@ ul.task-list li input[type="checkbox"] {
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp('/' + window.location.host + '/');
+        var filterRegex = new RegExp("https:\/\/sfraser8910\.github\.io\/airbnb-listings\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
