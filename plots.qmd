@@ -1,0 +1,195 @@
+---
+title: "Plots"
+format: html
+execute:
+    echo: false
+---
+
+```{r,message=FALSE, warning=FALSE}
+#libraries
+library(tidyverse)
+library(tidyr)
+library(patchwork)
+library(plotly)
+```
+
+```{r}
+#could have saved as csvs in scripts for less repetition 
+#all data
+combined_data <- read_csv("raw_csvs/airbnb_combined.csv",show_col_types = FALSE)
+
+#data with no nas
+cleaned_data <- combined_data |> drop_na()
+
+avg_price_by_city <- cleaned_data |>
+  group_by(city) |>
+  summarize(realSum = mean(realSum, na.rm = TRUE)) |>
+  ungroup()
+
+#for sect. 1
+avg_price_by_distance <- cleaned_data |>
+  mutate(dist = cut(dist, 
+    breaks = c(0, 5, 10, 15, 20, Inf),
+    labels = c("0-5km", "5-10km", "10-15km", "15-20km", "20+km"),
+    include.lowest = TRUE)) |>
+  group_by(dist) |>
+  summarize(realSum = mean(realSum, na.rm = TRUE)) |>
+  ungroup()
+
+#for sect 2.
+avg_price_by_met_dist <- cleaned_data |>
+  mutate(metro_dist = cut(metro_dist, 
+    breaks = c(0, 3, 6, 9, 12, 15, Inf),
+    labels = c("0-3km", "3-6km", "6-9km", "9-12km", "12-15km", "15+km"),
+    include.lowest = TRUE)) |>
+  group_by(metro_dist) |>
+  summarize(realSum = mean(realSum, na.rm = TRUE)) |>
+  ungroup()
+
+#London and Amst only data
+#If I had more time, to make my dataset more representative I would have adjusted this for the fact that there are many more Amsterdam data points than London data points
+london_amsterdam <- cleaned_data |> filter(city %in% c("amsterdam", "london")) |> arrange(desc(city))
+
+#Just Amst
+amst <- london_amsterdam |> filter(city == c("amsterdam"))
+
+#Just London
+lon <- london_amsterdam |> filter(city == c("london"))
+
+```
+
+After noticing the surprising difference in the price of rentals in Amsterdam and elsewhere, I decided to compare listings in Amsterdam and London across different categories which may influence price in an effort to understand why Amsterdam listing prices are so much higher than notoriously expensive cities like London.
+
+```{r,message=FALSE}
+#sect 1.
+
+#could have added interactivity
+avg_price_by_distance|>ggplot(aes(x=dist,y=realSum,group=1))+geom_col()+scale_y_continuous(breaks = c(0, 50, 100, 150, 200, 250, 300))+labs(x="Distance from City Center (in Kiolmeters)", y="Average Rental Price (in Euros)", title=stringr::str_wrap("Average Price of Airbnb Rentals in European Cities According to Distance from City Center"), subtitle="Generally rentals closer to the city center are more expensive.")
+
+p1<- cleaned_data|>ggplot(aes(x=dist,y=realSum,group=1))+geom_jitter(aes(color=city))+scale_y_log10()+geom_smooth(se = FALSE)+labs(title="Airbnb Rental Price in European Cities by Distance from City Center", subtitle= "More expensive rentals tend to be located closer to the city center than farther from it.",y="Rental Price (in Euros)", x="Distance from City Center (in Kiolmeters)") 
+
+ggplotly(p1)|> layout(
+  title = list(
+    text = paste0(
+      "Airbnb Rental Price in European Cities by Distance from City Center",
+      '<br><sup>',
+      "More expensive rentals tend to be located closer to the city center than farther from it.",
+      '</sup>'
+    )
+  )
+)
+
+plot1<- london_amsterdam|>ggplot(aes(x=dist,y=realSum, color=city))+geom_point(alpha=0.3)+scale_y_log10()+geom_smooth(method = "loess", formula = y ~ x, se = FALSE) + geom_smooth(method = "loess", formula = y ~ x, se = FALSE, linewidth = 1.5)+labs(title="Airbnb Rental Price in Amsterdam and London by Distance from City Center", subtitle=stringr::str_wrap("Rentals in Amsterdam and generally closer to the city center and more expensive than rentals in London."), y="Rental Price (in Euros)", x="Distance from City Center (in Kiolmeters)")
+
+plot2<- amst|>ggplot(aes(x=dist,y=realSum))+geom_point(alpha=0.3, color = "#F8766D")+scale_y_log10()+geom_smooth(method = "loess", formula = y ~ x, se = FALSE)+labs(y="Rental Price (in Euros)", x="Distance from City Center (in Kiolmeters)",title=stringr::str_wrap("Price of Airbnb Rentals in Amsterdam Relative to their Distance from the City Center"), subtitle= "More expensive rentals tend to be located closer to the center of Amsterdam.")
+
+plot3<-lon|>ggplot(aes(x=dist,y=realSum))+geom_point(alpha=0.3, color = "#00BFC4")+scale_y_log10()+geom_smooth(method = "loess", formula = y ~ x, se = FALSE)+labs(y="Rental Price (in Euros)", x="Distance from City Center (in Kiolmeters)", title="Price of London Airbnbs According to their Distance from the City Center", subtitle= "More expensive rentals tend to be located closer to the city center.")
+
+plot1 
+plot2 
+plot3
+
+```
+
+Rentals closer to city centers tend to be more expensive than rentals farther from city centers. Most Amsterdam rentals are closer to the city center, while some London Airbnbs are much farther from the city center. Thus, Amsterdam rentals may be more expensive on average than London rentals because they tend to be closer to the city center.  
+
+```{r,message=FALSE}
+#sect 2.
+
+wrapped_title <- str_wrap("Airbnb Rental Price in European Cities by Distance from Nearest Metro Station")
+
+#could have added interactivity
+avg_price_by_met_dist|>ggplot(aes(x=metro_dist,y=realSum,group=1))+geom_col()+scale_y_continuous(breaks = c(0, 50, 100, 150, 200, 250, 300))+labs(x="Distance from Nearest Metro Station Center (in Kiolmeters)", y="Average Rental Price (in Euros)", title=stringr::str_wrap("Average Price of Airbnb Rentals in European Cities According to Distance from the Nearest Metro Station"), subtitle="More expensive Airbnbs tend to be closer to metro stations.")
+
+p2<-cleaned_data|>ggplot(aes(x=metro_dist,y=realSum,group=1))+geom_jitter(aes(color=city))+scale_y_log10()+geom_smooth(se = FALSE)+labs(title=stringr::str_wrap("Airbnb Rental Price in European Cities by Distance from Nearest Metro Station"), subtitle= "Rentals near metro stations tend to be more expensive than those farther from stations.",y="Rental Price (in Euros)", x="Distance from Nearest Metro Station (in Kiolmeters)")
+
+ggplotly(p2)|> layout(
+  title = list(
+    text = paste0(
+      gsub("\n", "<br>", wrapped_title),
+      "<br><sup>",
+      "Rentals near metro stations tend to be more expensive than those farther from stations.",
+      '</sup>'
+    )
+  )
+)
+
+plot4<- london_amsterdam|>ggplot(aes(x=metro_dist,y=realSum, color=city))+geom_point(alpha=0.3)+scale_y_log10()+geom_smooth(method = "loess", formula = y ~ x, se = FALSE) + geom_smooth(method = "loess", formula = y ~ x, se = FALSE, linewidth = 1.5)+labs(y="Rental Price (in Euros)", x="Distance from Nearest Metro Station (in Kiolmeters)",title=stringr::str_wrap("Price Airbnbs in Amsterdam and London Relative to their Distance from the Nearest Metro Station"), subtitle= stringr::str_wrap("Rentals in Amsterdam tend to be closer to metro stations and more expensive than those in London."))
+
+plot5<- amst|>ggplot(aes(x=metro_dist,y=realSum))+geom_point(alpha=0.3, color = "#F8766D")+scale_y_log10()+geom_smooth(method = "loess", formula = y ~ x, se = FALSE)+labs(y="Rental Price (in Euros)", x="Distance from the Nearest Metro Station (in Kiolmeters)", title=stringr::str_wrap("Price of Amsterdam Airbnbs Relative to their Distance from the Nearest Metro Station"), subtitle= "More expensive rentals tend to be located closer to metro stations.")
+
+plot6<-lon|>ggplot(aes(x=metro_dist,y=realSum))+geom_point(alpha=0.3, color = "#00BFC4")+scale_y_log10()+geom_smooth(method = "loess", formula = y ~ x, se = FALSE)+labs(y="Rental Price (in Euros)", x="Distance from the Nearest Metro Station (in Kiolmeters)", title=stringr::str_wrap("Price of Airbnbs in London According to their Distance from the Nearest Metro Station"), subtitle= "Rentals closer to metro stations tend to be more expensive.")
+
+plot4
+plot5
+plot6
+```
+
+Generally, Airbnbs closer to metro stations are more expensive than ones farther from metro stations. In Amsterdam, rentals are closer to stations than in London, indicating the listings in Amsterdam may be more expensive than those in London because they tend to be closer to metro stations. 
+
+```{r}
+#sect 3.
+
+cleaned_data %>%
+  filter(!is.na(bedrooms), !is.na(realSum), realSum < 1000) %>%
+  ggplot(aes(x = factor(bedrooms), y = realSum)) +
+  geom_boxplot() +
+  scale_y_continuous(breaks = seq(0, 1600, by = 200)) +
+  labs(
+    x = "Number of Bedrooms",
+    y = "Rental Price (in Euros)",
+    title = stringr::str_wrap("Distribution of Airbnb Rental Prices in European Cities According Number of Bedrooms"),
+    subtitle= "More expensive rentals have more bedrooms, but the most expensive rentals have 3-5 bedrooms."
+  ) +
+  theme_minimal()
+
+london_amsterdam %>%
+  filter(!is.na(bedrooms), bedrooms <= 6) %>%
+  ggplot(aes(x = bedrooms, fill = city)) +
+  geom_histogram(binwidth = 1, position = "dodge", color = "white") +
+  labs(
+    title = stringr::str_wrap("Distribution of Airbnb Prices According Number of Bedrooms in Rentals in London and Amsterdam"),
+    x = "Number of Bedrooms",
+    y = "Number of Rentals",
+    subtitle= stringr::str_wrap("Compared to rentals in Amsterdam, a disproportionate amount of rentals in London have fewer bedrooms, implying London rentals may be generally cheaper than Amsterdam Rentals because they have fewer bedrooms.")
+  ) +
+  theme_minimal()
+
+#amst|> ggplot(aes(y=bedrooms)) + geom_bar() +labs(y="Number of Bedrooms", x="Number of Rentals",title="Distribution of Airbnb Prices in Amsterdam According Number of Bedrooms", subtitle="Most rentals in Amsterdam have one bedroom.") 
+#lon|> ggplot(aes(y=bedrooms)) + geom_bar()+labs(y="Number of Bedrooms", x="Number of Rentals",title=stringr::str_wrap("Distribution of Airbnb Prices in London by the Number of Bedrooms in the Rentals"), subtitle="Most rentals in London have one bedroom.")
+```
+
+Rentals with more bedrooms tend to be more expensive than those with fewer rooms. Compared to Amsterdam Airbnbs, a relatively large proportion of rentals in London only contain one room. Thus the difference in average rental price between the two cities could be attributed to more London rentals having fewer bedrooms.
+
+```{r}
+#sect 4. 
+
+cleaned_data %>%
+  filter(!is.na(room_type), !is.na(realSum), realSum < 1000) %>%
+  ggplot(aes(x = factor(room_type), y = realSum)) +
+  geom_boxplot() +
+  scale_y_continuous(breaks = seq(0, 1600, by = 200)) +
+  theme_minimal() +
+  labs(
+    x = "Rental Type",
+    y = "Rental Price (in Euros)",
+    title = stringr::str_wrap("Distribution of Airbnb  Prices in European Cities According Type of Rental"),
+    subtitle= "Entire home/apt rentals have higher medians than other rental types.")
+london_amsterdam %>%
+  ggplot(aes(x = factor(room_type), fill = city)) +
+  geom_bar(position = "dodge") +
+  theme_minimal() +
+  labs(
+    title = stringr::str_wrap("Distribution of Airbnb Prices by Rental Type for Listings in London and Amsterdam"),
+    x = "Rental Type",
+    y = "Number of Rentals",
+    subtitle= stringr::str_wrap("A smaller proportion of rentals in London are entire homes/apts, which tend to be more expensive than other rental types, than in Amsterdam, in part explaining why rentals in London tend to be more expensive than those in Amsterdam.")
+  )
+
+#amst|> ggplot(aes(y=room_type)) + geom_bar() + labs(y="Rental Type", x="Number of Rentals",title="Distribution of Airbnb Prices in Amsterdam According to Rental Type.", subtitle="Most rentals in Amsterdam are entire homes/apts.")
+#lon|> ggplot(aes(y=room_type)) + geom_bar() + labs(y="Rental Type", x="Number of Rentals",title="Distribution of Airbnb Prices in London by Rental Type", subtitle="Most rentals in London are private rooms.")
+
+```
+
+Entire home/apt rentals have a higher median price than smaller rentals (private and shared rooms). Amsterdam rentals may have a higher average price than London rentals because most rentals in Amsterdam are entire homes/apts, while most London rentals are just private rooms.
+
